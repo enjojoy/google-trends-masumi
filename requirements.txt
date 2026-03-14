@@ -1,0 +1,4 @@
+masumi
+python-dotenv
+openai
+pytrends
