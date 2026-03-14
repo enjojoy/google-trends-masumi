@@ -2,7 +2,7 @@
 """
 Trends Researcher - Main Entry Point
 
-Run with: masumi run main.py
+Run with: python main.py
 """
 from dotenv import load_dotenv
 load_dotenv()
@@ -25,8 +25,7 @@ INPUT_SCHEMA = {
             "type": "string",
             "name": "Geo",
             "data": {
-                "description": "Country code (e.g. US, GB, DE). Leave empty for worldwide.",
-                "optional": True
+                "description": "Country code (e.g. US, GB, DE). Leave empty for worldwide. Optional."
             }
         },
         {
@@ -34,8 +33,7 @@ INPUT_SCHEMA = {
             "type": "string",
             "name": "Timeframe",
             "data": {
-                "description": "Time range e.g. 'today 12-m', 'today 3-m'. Default: today 12-m",
-                "optional": True
+                "description": "Time range e.g. 'today 12-m', 'today 3-m'. Default: today 12-m. Optional."
             }
         }
     ]

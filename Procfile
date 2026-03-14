@@ -1,1 +1,1 @@
-web: masumi run main.py
+web: python main.py

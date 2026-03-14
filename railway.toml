@@ -2,7 +2,7 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "python agent.py"
+startCommand = "python main.py"
 healthcheckPath = "/availability"
 healthcheckTimeout = 30
 restartPolicyType = "on_failure"
@@ -35,5 +35,5 @@ default = "Preprod"
 
 [[deploy.envVars]]
 name = "AGENT_IDENTIFIER"
-description = "Set this after registering on Masumi (leave blank for now)"
+description = "Set after registering on Masumi (leave blank for now)"
 required = false
