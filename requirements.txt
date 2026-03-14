@@ -2,4 +2,3 @@ masumi
 python-dotenv
 openai
 pytrends
-uvicorn
