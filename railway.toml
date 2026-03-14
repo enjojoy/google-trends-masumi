@@ -1,0 +1,39 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "python agent.py"
+healthcheckPath = "/availability"
+healthcheckTimeout = 30
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+[[deploy.envVars]]
+name = "PAYMENT_SERVICE_URL"
+description = "Your Masumi Payment Service URL (e.g. https://your-service.up.railway.app/api/v1)"
+required = true
+
+[[deploy.envVars]]
+name = "PAYMENT_API_KEY"
+description = "Payment Service API key from your Masumi admin dashboard"
+required = true
+
+[[deploy.envVars]]
+name = "SELLER_VKEY"
+description = "Your Cardano wallet verification key (from Masumi admin dashboard)"
+required = true
+
+[[deploy.envVars]]
+name = "OPENAI_API_KEY"
+description = "Your OpenAI API key"
+required = true
+
+[[deploy.envVars]]
+name = "NETWORK"
+description = "Cardano network: Preprod or Mainnet"
+default = "Preprod"
+
+[[deploy.envVars]]
+name = "AGENT_IDENTIFIER"
+description = "Set this after registering on Masumi (leave blank for now)"
+required = false

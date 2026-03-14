@@ -6,7 +6,7 @@ Give it a plain-English research request — get back a structured report with k
 
 ## Deploy to Railway
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/enjojoy/google-trends-masumi)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/enjojoy/google-trends-masumi&referralCode=masumi)
 
 ### Environment Variables
 
