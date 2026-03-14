@@ -1,11 +1,11 @@
 import os
-import os
 import json
 import asyncio
 from dotenv import load_dotenv
 from pytrends.request import TrendReq
 from openai import AsyncOpenAI
-from masumi.agent import MasumiAgent
+import uvicorn
+from masumi import create_masumi_app, Config
 
 load_dotenv()
 
@@ -107,7 +107,6 @@ def fetch_trends(keywords: list, geo: str, timeframe: str) -> dict:
 
     result = {}
 
-    # Interest over time
     try:
         iot = pytrends.interest_over_time()
         iot_summary = {}
@@ -126,7 +125,6 @@ def fetch_trends(keywords: list, geo: str, timeframe: str) -> dict:
     except Exception as e:
         result["interest_over_time"] = {"error": str(e)}
 
-    # Related queries
     try:
         rq = pytrends.related_queries()
         related = {}
@@ -142,7 +140,6 @@ def fetch_trends(keywords: list, geo: str, timeframe: str) -> dict:
     except Exception:
         result["related_queries"] = {}
 
-    # Related topics
     try:
         rt = pytrends.related_topics()
         topics = {}
@@ -158,14 +155,20 @@ def fetch_trends(keywords: list, geo: str, timeframe: str) -> dict:
     return result
 
 
+config = Config(
+    payment_service_url=os.environ["PAYMENT_SERVICE_URL"],
+    payment_api_key=os.environ["PAYMENT_API_KEY"],
+)
+
+app = create_masumi_app(
+    config=config,
+    agent_identifier=os.environ.get("AGENT_IDENTIFIER"),
+    network=os.environ.get("NETWORK", "Preprod"),
+    seller_vkey=os.environ.get("SELLER_VKEY"),
+    start_job_handler=process_job,
+    input_schema_handler=INPUT_SCHEMA,
+)
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
-    agent = MasumiAgent(
-        process_job=process_job,
-        input_schema=INPUT_SCHEMA,
-        name="Trends Researcher",
-        description="Marketing research powered by Google Trends. Describe what you want to research in plain English — get a structured trend analysis with actionable insights.",
-        version="1.0.0",
-        pricing_usdm=1_000_000  # 1.00 USDM per job
-    )
-    agent.run(host="0.0.0.0", port=port)
+    uvicorn.run(app, host="0.0.0.0", port=port)
