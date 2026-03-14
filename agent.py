@@ -1,4 +1,5 @@
 import os
+import os
 import json
 import asyncio
 from dotenv import load_dotenv
@@ -158,6 +159,7 @@ def fetch_trends(keywords: list, geo: str, timeframe: str) -> dict:
 
 
 if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))
     agent = MasumiAgent(
         process_job=process_job,
         input_schema=INPUT_SCHEMA,
@@ -166,4 +168,4 @@ if __name__ == "__main__":
         version="1.0.0",
         pricing_usdm=1_000_000  # 1.00 USDM per job
     )
-    agent.run()
+    agent.run(host="0.0.0.0", port=port)
