@@ -25,7 +25,8 @@ INPUT_SCHEMA = {
             "type": "string",
             "name": "Geo",
             "data": {
-                "description": "Country code (e.g. US, GB, DE). Leave empty for worldwide. Optional."
+                "description": "Country code (e.g. US, GB, DE). Leave empty for worldwide. Optional.",
+                "optional": True
             }
         },
         {
@@ -33,7 +34,8 @@ INPUT_SCHEMA = {
             "type": "string",
             "name": "Timeframe",
             "data": {
-                "description": "Time range e.g. 'today 12-m', 'today 3-m'. Default: today 12-m. Optional."
+                "description": "Time range e.g. 'today 12-m', 'today 3-m'. Default: today 12-m. Optional.",
+                "optional": True
             }
         }
     ]
