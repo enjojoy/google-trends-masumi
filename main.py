@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """
 Trends Researcher - Main Entry Point
-
-Run with: python main.py
 """
 import os
 from dotenv import load_dotenv
@@ -17,29 +15,30 @@ INPUT_SCHEMA = {
     "input_data": [
         {
             "id": "request",
-            "type": "text",
+            "type": "string",
             "name": "Research Request",
+            "validations": [],
             "data": {
                 "description": "Natural language marketing research request (e.g. 'Compare interest in oat milk vs almond milk in the US over the last 12 months')"
             }
         },
         {
             "id": "geo",
-            "type": "text",
+            "type": "string",
             "name": "Geo",
+            "validations": [{"validation": "optional", "value": ""}],
             "data": {
                 "description": "Country code (e.g. US, GB, DE). Leave empty for worldwide."
-            },
-            "validations": [{"validation": "optional", "value": ""}]
+            }
         },
         {
             "id": "timeframe",
-            "type": "text",
+            "type": "string",
             "name": "Timeframe",
+            "validations": [{"validation": "optional", "value": ""}],
             "data": {
                 "description": "Time range e.g. 'today 12-m', 'today 3-m'. Default: today 12-m."
-            },
-            "validations": [{"validation": "optional", "value": ""}]
+            }
         }
     ]
 }
@@ -58,7 +57,6 @@ app = create_masumi_app(
     input_schema_handler=INPUT_SCHEMA,
 )
 
-# Add CORS so Sokosumi can fetch /input_schema from the browser
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
