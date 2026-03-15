@@ -3,13 +3,30 @@
 Trends Researcher - Main Entry Point
 """
 import os
+import logging
 from dotenv import load_dotenv
 load_dotenv()
 
+logger = logging.getLogger(__name__)
+
 from masumi import create_masumi_app, Config
+from masumi.job_manager import InMemoryJobStorage
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from agent import process_job
+
+# Use PostgreSQL if DATABASE_URL is set, otherwise fall back to in-memory
+try:
+    if os.environ.get("DATABASE_URL"):
+        from storage import PostgresJobStorage
+        job_storage = PostgresJobStorage()
+        logger.info("Using PostgreSQL job storage")
+    else:
+        job_storage = InMemoryJobStorage()
+        logger.warning("DATABASE_URL not set — using in-memory storage (jobs lost on restart)")
+except Exception as e:
+    logger.warning(f"Failed to init PostgreSQL storage: {e} — falling back to in-memory")
+    job_storage = InMemoryJobStorage()
 
 INPUT_SCHEMA = {
     "input_data": [
@@ -58,6 +75,7 @@ app = create_masumi_app(
     seller_vkey=os.environ.get("SELLER_VKEY"),
     start_job_handler=process_job,
     input_schema_handler=INPUT_SCHEMA,
+    job_storage=job_storage,
 )
 
 app.add_middleware(
