@@ -46,6 +46,9 @@ async def process_job(identifier_from_purchaser: str, input_data: dict):
     request = input_data.get("request", "")
     geo_override = input_data.get("geo", "")
     timeframe_override = input_data.get("timeframe", "")
+    # Strip label suffix if user picked from dropdown (e.g. "today 12-m (Last 12 months)" → "today 12-m")
+    if timeframe_override and "(" in timeframe_override:
+        timeframe_override = timeframe_override.split("(")[0].strip()
 
     # Step 1: Parse the research request
     parse_resp = await openai_client.chat.completions.create(

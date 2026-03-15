@@ -21,15 +21,28 @@ INPUT_SCHEMA = {
             "id": "geo",
             "type": "string",
             "name": "Geo",
-            "description": "Country code (e.g. US, GB, DE). Leave empty for worldwide.",
+            "description": "2-letter country code to filter by region (e.g. US, GB, DE, FR, JP). Leave empty for worldwide results.",
             "validations": [{"validation": "optional", "value": "true"}]
         },
         {
             "id": "timeframe",
-            "type": "string",
+            "type": "option",
             "name": "Timeframe",
-            "description": "Time range e.g. 'today 12-m', 'today 3-m'. Default: today 12-m.",
-            "validations": [{"validation": "optional", "value": "true"}]
+            "description": "Time range for the trends data. Default: Last 12 months.",
+            "data": {
+                "values": [
+                    "today 1-m (Last 1 month)",
+                    "today 3-m (Last 3 months)",
+                    "today 12-m (Last 12 months)",
+                    "today 5-y (Last 5 years)",
+                    "all (Since 2004)"
+                ],
+                "default": "today 12-m (Last 12 months)"
+            },
+            "validations": [
+                {"validation": "optional", "value": "true"},
+                {"validation": "max", "value": "1"}
+            ]
         }
     ]
 }
