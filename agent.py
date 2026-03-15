@@ -45,19 +45,59 @@ async def process_job(identifier_from_purchaser: str, input_data: dict):
     """
     request = input_data.get("request", "")
 
-    # option type returns a list — extract first element
+    GEO_OPTIONS = [
+        "Worldwide", "US - United States", "GB - United Kingdom", "CA - Canada",
+        "AU - Australia", "DE - Germany", "FR - France", "JP - Japan", "IN - India",
+        "BR - Brazil", "MX - Mexico", "ES - Spain", "IT - Italy", "NL - Netherlands",
+        "SE - Sweden", "NO - Norway", "DK - Denmark", "FI - Finland", "PL - Poland",
+        "CH - Switzerland", "AT - Austria", "BE - Belgium", "PT - Portugal",
+        "CZ - Czech Republic", "HU - Hungary", "RO - Romania", "UA - Ukraine",
+        "TR - Turkey", "SA - Saudi Arabia", "AE - United Arab Emirates", "IL - Israel",
+        "ZA - South Africa", "NG - Nigeria", "EG - Egypt", "KR - South Korea",
+        "CN - China", "SG - Singapore", "ID - Indonesia", "TH - Thailand",
+        "PH - Philippines", "MY - Malaysia", "VN - Vietnam", "PK - Pakistan",
+        "BD - Bangladesh", "AR - Argentina", "CO - Colombia", "CL - Chile",
+        "PE - Peru", "NZ - New Zealand", "RU - Russia"
+    ]
+    # option type may return list or int index — normalize to string value
     geo_override = input_data.get("geo", "")
     if isinstance(geo_override, list):
-        geo_override = geo_override[0] if geo_override else ""
+        raw = geo_override[0] if geo_override else ""
+        if isinstance(raw, int) and raw < len(GEO_OPTIONS):
+            geo_override = GEO_OPTIONS[raw]
+        else:
+            geo_override = str(raw) if raw else ""
+    elif isinstance(geo_override, int):
+        geo_override = GEO_OPTIONS[geo_override] if geo_override < len(GEO_OPTIONS) else ""
+    else:
+        geo_override = str(geo_override) if geo_override else ""
     # Extract 2-letter code (e.g. "US - United States" → "US", "Worldwide" → "")
     if geo_override and geo_override != "Worldwide":
         geo_override = geo_override.split(" - ")[0].strip()
     elif geo_override == "Worldwide":
         geo_override = ""
 
+    TIMEFRAME_OPTIONS = [
+        "today 1-m (Last 1 month)",
+        "today 3-m (Last 3 months)",
+        "today 12-m (Last 12 months)",
+        "today 5-y (Last 5 years)",
+        "all (Since 2004)"
+    ]
     timeframe_override = input_data.get("timeframe", "")
     if isinstance(timeframe_override, list):
-        timeframe_override = timeframe_override[0] if timeframe_override else ""
+        raw = timeframe_override[0] if timeframe_override else ""
+        # masumi may pass index (int) instead of value string
+        if isinstance(raw, int) and raw < len(TIMEFRAME_OPTIONS):
+            timeframe_override = TIMEFRAME_OPTIONS[raw]
+        else:
+            timeframe_override = str(raw) if raw else ""
+    elif isinstance(timeframe_override, int):
+        timeframe_override = TIMEFRAME_OPTIONS[timeframe_override] if timeframe_override < len(TIMEFRAME_OPTIONS) else ""
+    else:
+        timeframe_override = str(timeframe_override) if timeframe_override else ""
+    else:
+        timeframe_override = str(timeframe_override) if timeframe_override else ""
     # Strip label suffix (e.g. "today 12-m (Last 12 months)" → "today 12-m")
     if timeframe_override and "(" in timeframe_override:
         timeframe_override = timeframe_override.split("(")[0].strip()
