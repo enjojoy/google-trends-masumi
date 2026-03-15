@@ -15,28 +15,31 @@ INPUT_SCHEMA = {
     "input_data": [
         {
             "id": "request",
-            "type": "string",
+            "type": "text",
             "name": "Research Request",
             "validations": [],
             "data": {
-                "description": "Natural language marketing research request (e.g. 'Compare interest in oat milk vs almond milk in the US over the last 12 months')"
+                "placeholder": "e.g. Compare interest in oat milk vs almond milk in the US over the last 12 months",
+                "description": "Natural language marketing research request"
             }
         },
         {
             "id": "geo",
-            "type": "string",
+            "type": "text",
             "name": "Geo",
             "validations": [{"validation": "optional", "value": "true"}],
             "data": {
+                "placeholder": "US",
                 "description": "Country code (e.g. US, GB, DE). Leave empty for worldwide."
             }
         },
         {
             "id": "timeframe",
-            "type": "string",
+            "type": "text",
             "name": "Timeframe",
             "validations": [{"validation": "optional", "value": "true"}],
             "data": {
+                "placeholder": "today 12-m",
                 "description": "Time range e.g. 'today 12-m', 'today 3-m'. Default: today 12-m."
             }
         }
