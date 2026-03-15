@@ -25,8 +25,8 @@ INPUT_SCHEMA = {
         {
             "id": "geo",
             "type": "string",
-            "name": "Geo",
-            "validations": [{"validation": "optional", "value": ""}],
+            "name": "Geo (optional)",
+            "validations": [],
             "data": {
                 "description": "Country code (e.g. US, GB, DE). Leave empty for worldwide."
             }
@@ -34,8 +34,8 @@ INPUT_SCHEMA = {
         {
             "id": "timeframe",
             "type": "string",
-            "name": "Timeframe",
-            "validations": [{"validation": "optional", "value": ""}],
+            "name": "Timeframe (optional)",
+            "validations": [],
             "data": {
                 "description": "Time range e.g. 'today 12-m', 'today 3-m'. Default: today 12-m."
             }
