@@ -2,3 +2,4 @@ masumi
 python-dotenv
 openai
 pytrends
+fastapi
