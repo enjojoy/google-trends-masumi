@@ -44,14 +44,21 @@ async def process_job(identifier_from_purchaser: str, input_data: dict):
         Structured marketing research report as a string
     """
     request = input_data.get("request", "")
+
+    # option type returns a list — extract first element
     geo_override = input_data.get("geo", "")
-    # Extract 2-letter code from dropdown selection (e.g. "US - United States" → "US", "Worldwide" → "")
+    if isinstance(geo_override, list):
+        geo_override = geo_override[0] if geo_override else ""
+    # Extract 2-letter code (e.g. "US - United States" → "US", "Worldwide" → "")
     if geo_override and geo_override != "Worldwide":
         geo_override = geo_override.split(" - ")[0].strip()
     elif geo_override == "Worldwide":
         geo_override = ""
+
     timeframe_override = input_data.get("timeframe", "")
-    # Strip label suffix if user picked from dropdown (e.g. "today 12-m (Last 12 months)" → "today 12-m")
+    if isinstance(timeframe_override, list):
+        timeframe_override = timeframe_override[0] if timeframe_override else ""
+    # Strip label suffix (e.g. "today 12-m (Last 12 months)" → "today 12-m")
     if timeframe_override and "(" in timeframe_override:
         timeframe_override = timeframe_override.split("(")[0].strip()
 
