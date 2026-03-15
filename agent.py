@@ -88,7 +88,52 @@ Write a structured report with:
 Be specific and data-driven."""}]
     )
 
-    return summary_resp.choices[0].message.content
+    report = summary_resp.choices[0].message.content
+
+    # Append raw data table
+    raw_section = format_raw_data(keywords, geo, timeframe, trends_data)
+
+    return f"{report}\n\n{raw_section}"
+
+
+def format_raw_data(keywords: list, geo: str, timeframe: str, trends_data: dict) -> str:
+    """Format raw pytrends data as markdown tables."""
+    lines = []
+    lines.append("---")
+    lines.append("## 📊 Raw Google Trends Data")
+    lines.append(f"**Source:** Google Trends | **Keywords:** {', '.join(keywords)} | **Geo:** {geo or 'Worldwide'} | **Timeframe:** {timeframe}")
+    lines.append("")
+
+    # Interest over time summary table
+    iot = trends_data.get("interest_over_time", {})
+    if iot and "error" not in iot:
+        lines.append("### Interest Over Time (0–100 index)")
+        lines.append("| Keyword | Avg | Peak | Peak Date | Latest | Trend |")
+        lines.append("|---------|-----|------|-----------|--------|-------|")
+        for kw, stats in iot.items():
+            trend_emoji = "📈" if stats["trend"] == "rising" else "📉"
+            lines.append(f"| {kw} | {stats['avg']} | {stats['peak']} | {stats['peak_date']} | {stats['latest']} | {trend_emoji} {stats['trend']} |")
+        lines.append("")
+
+    # Related queries table
+    related = trends_data.get("related_queries", {})
+    if related:
+        lines.append("### Related Queries")
+        for kw, queries in related.items():
+            lines.append(f"**{kw}**")
+            top = queries.get("top", [])
+            rising = queries.get("rising", [])
+            if top or rising:
+                lines.append("| Top Queries | Rising Queries |")
+                lines.append("|-------------|----------------|")
+                max_len = max(len(top), len(rising))
+                for i in range(max_len):
+                    t = top[i] if i < len(top) else ""
+                    r = rising[i] if i < len(rising) else ""
+                    lines.append(f"| {t} | {r} |")
+            lines.append("")
+
+    return "\n".join(lines)
 
 
 def fetch_trends(keywords: list, geo: str, timeframe: str) -> dict:
