@@ -3,11 +3,29 @@
 Trends Researcher - Main Entry Point
 """
 import os
+import logging
 from dotenv import load_dotenv
 load_dotenv()
 
 from masumi import run
+from masumi.job_manager import InMemoryJobStorage
 from agent import process_job
+
+logger = logging.getLogger(__name__)
+
+# Use PostgreSQL if DATABASE_URL is set, otherwise fall back to in-memory
+def get_storage():
+    database_url = os.environ.get("DATABASE_URL")
+    if database_url:
+        try:
+            from storage import PostgresJobStorage
+            logger.info("Using PostgreSQL job storage")
+            return PostgresJobStorage()
+        except Exception as e:
+            logger.warning(f"Failed to init PostgreSQL storage: {e} — falling back to in-memory")
+    else:
+        logger.warning("DATABASE_URL not set — using in-memory storage (jobs lost on restart)")
+    return InMemoryJobStorage()
 
 INPUT_SCHEMA = {
     "input_data": [
@@ -108,5 +126,6 @@ INPUT_SCHEMA = {
 if __name__ == "__main__":
     run(
         start_job_handler=process_job,
-        input_schema_handler=INPUT_SCHEMA
+        input_schema_handler=INPUT_SCHEMA,
+        job_storage=get_storage()
     )
