@@ -27,7 +27,7 @@ INPUT_SCHEMA = {
             "data": {
                 "description": "Country code (e.g. US, GB, DE). Leave empty for worldwide."
             },
-            "validations": [{"validation": "optional"}]
+            "validations": [{"validation": "optional", "value": ""}]
         },
         {
             "id": "timeframe",
@@ -36,7 +36,7 @@ INPUT_SCHEMA = {
             "data": {
                 "description": "Time range e.g. 'today 12-m', 'today 3-m'. Default: today 12-m."
             },
-            "validations": [{"validation": "optional"}]
+            "validations": [{"validation": "optional", "value": ""}]
         }
     ]
 }
