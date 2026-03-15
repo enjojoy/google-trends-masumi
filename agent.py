@@ -96,8 +96,6 @@ async def process_job(identifier_from_purchaser: str, input_data: dict):
         timeframe_override = TIMEFRAME_OPTIONS[timeframe_override] if timeframe_override < len(TIMEFRAME_OPTIONS) else ""
     else:
         timeframe_override = str(timeframe_override) if timeframe_override else ""
-    else:
-        timeframe_override = str(timeframe_override) if timeframe_override else ""
     # Strip label suffix (e.g. "today 12-m (Last 12 months)" → "today 12-m")
     if timeframe_override and "(" in timeframe_override:
         timeframe_override = timeframe_override.split("(")[0].strip()
