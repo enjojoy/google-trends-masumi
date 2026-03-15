@@ -45,6 +45,11 @@ async def process_job(identifier_from_purchaser: str, input_data: dict):
     """
     request = input_data.get("request", "")
     geo_override = input_data.get("geo", "")
+    # Extract 2-letter code from dropdown selection (e.g. "US - United States" → "US", "Worldwide" → "")
+    if geo_override and geo_override != "Worldwide":
+        geo_override = geo_override.split(" - ")[0].strip()
+    elif geo_override == "Worldwide":
+        geo_override = ""
     timeframe_override = input_data.get("timeframe", "")
     # Strip label suffix if user picked from dropdown (e.g. "today 12-m (Last 12 months)" → "today 12-m")
     if timeframe_override and "(" in timeframe_override:
